@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatted Timestamp</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 2.5rem;
+            background: #1e1e1e;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            width: 90%;
+            max-width: 450px;
+        }
+        h1 { color: #bb86fc; margin-bottom: 0.5rem; }
+        code {
+            display: block;
+            background: #000;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #03dac6;
+            font-size: 0.9rem;
+        }
+        .highlight {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border: 2px dashed #bb86fc;
+            border-radius: 8px;
+            cursor: text;
+            user-select: all;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .status {
+            margin-top: 20px;
+            color: #03dac6;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Timestamp Tool</h1>
+    <p>Format: <code>DD-MM-YYYY-AM/PM_hh_mm_ss</code></p>
+    
+    <div class="highlight" id="target">
+        SELECT & COPY
+    </div>
+
+    <div id="statusMsg" class="status">✓ TIMESTAMP COPIED</div>
+</div>
+
+<script>
+    document.addEventListener('copy', (event) => {
+        const now = new Date();
+
+        // Helper to add leading zeros
+        const pad = (num) => String(num).padStart(2, '0');
+
+        const dd = pad(now.getDate());
+        const mm = pad(now.getMonth() + 1); // Months are 0-indexed
+        const yyyy = now.getFullYear();
+        
+        let hours = now.getHours();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // convert 0 to 12
+        const hh = pad(hours);
+        
+        const min = pad(now.getMinutes());
+        const ss = pad(now.getSeconds());
+
+        // Construct: DD-MM-YYYY-PM/AM_hh_mm_ss
+        const formattedDate = `${dd}-${mm}-${yyyy}-${ampm}_${hh}_${min}_${ss}`;
+
+        event.clipboardData.setData('text/plain', formattedDate);
+        event.preventDefault();
+
+        const status = document.getElementById('statusMsg');
+        status.style.display = 'block';
+        setTimeout(() => { status.style.display = 'none'; }, 2000);
+    });
+</script>
+
+</body>
+</html>
